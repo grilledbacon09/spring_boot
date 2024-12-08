@@ -55,6 +55,8 @@ public class BoardController {
         int startPage = Math.max(nowPage-4, 1);
         int endPage = Math.min(nowPage+5, list.getTotalPages());
 
+        if(startPage > endPage) endPage = startPage;
+
         model.addAttribute("list", list);
         model.addAttribute("nowPage" , nowPage);
         model.addAttribute("startPage" , startPage);
