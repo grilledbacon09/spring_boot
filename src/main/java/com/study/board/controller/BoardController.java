@@ -29,10 +29,12 @@ public class BoardController {
     @PostMapping("/board/writepro")
     public String boardWritePro(Board board, Model model, MultipartFile file) throws Exception{
 
-        boardService.write(board, file);
+        //boardService.write(board, file);
 
-        model.addAttribute("message", "글 작성이 완료되었습니다.");
-        model.addAttribute("searchUrl", "/board/list");
+        //model.addAttribute("message", "글 작성이 완료되었습니다.");
+        //model.addAttribute("searchUrl", "/board/list");
+
+        model = boardService.write(board, model, "글 작성이 완료되었습니다.", "/board/list");
 
         return "message";
     }
@@ -41,7 +43,7 @@ public class BoardController {
     public String boardList(Model model,
                             @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
                             String searchKeyword){
-
+        /*
         Page<Board> list = null;
 
         if(searchKeyword == null){
@@ -49,6 +51,9 @@ public class BoardController {
         }else{
              list = boardService.boardSearchList(searchKeyword, pageable);
         }
+
+
+        list = boardService.boardList(searchKeyword, pageable);
 
 
         int nowPage = list.getPageable().getPageNumber()+1;
@@ -62,13 +67,20 @@ public class BoardController {
         model.addAttribute("startPage" , startPage);
         model.addAttribute("endPage" , endPage);
 
+        */
+
+        model = boardService.boardListModel(model, pageable, searchKeyword);
+
         return "boardlist";
     }
 
     @GetMapping("/board/view")
     public String boardView(Model model, Integer id){
 
-        model.addAttribute("board", boardService.boardView(id));
+        //model.addAttribute("board", boardService.boardView(id));
+
+        model = boardService.boardViewModel(model, id);
+
         return "boardview";
     }
 
@@ -76,10 +88,12 @@ public class BoardController {
     @GetMapping("board/delete")
     public String boardDelete(Integer id, Model model){
 
-        boardService.boardDelete(id);
+        //boardService.boardDelete(id);
 
-        model.addAttribute("message", "글 삭제가 완료되었습니다.");
-        model.addAttribute("searchUrl", "/board/list");
+        //model.addAttribute("message", "글 삭제가 완료되었습니다.");
+        //model.addAttribute("searchUrl", "/board/list");
+
+        model = boardService.boardDelete(model, id);
 
         return "message";
     }
@@ -87,21 +101,25 @@ public class BoardController {
     @GetMapping("board/modify/{id}")
     public String boardModify(@PathVariable("id") Integer id, Model model){
 
-        model.addAttribute("board", boardService.boardView(id));
+        //model.addAttribute("board", boardService.boardView(id));
+
+        model = boardService.boardViewModel(model, id);
         return "boardmodify";
     }
 
     @PostMapping("board/update/{id}")
     public String boardUpdate(@PathVariable("id") Integer id, Board board, Model model, MultipartFile file) throws Exception{
 
-        Board boardTemp = boardService.boardView(id);
-        boardTemp.setTitle(board.getTitle());
-        boardTemp.setContent(board.getContent());
+        //Board boardTemp = boardService.boardView(id);
+        //boardTemp.setTitle(board.getTitle());
+        //boardTemp.setContent(board.getContent());
 
-        boardService.write(boardTemp, file);
+        //boardService.write(boardTemp, model, "글 수정이 완료되었습니다.", "/board/list");
 
-        model.addAttribute("message", "글 수정이 완료되었습니다.");
-        model.addAttribute("searchUrl", "/board/list");
+        //model.addAttribute("message", "글 수정이 완료되었습니다.");
+        //model.addAttribute("searchUrl", "/board/list");
+
+        model = boardService.modify(id, model, board);
 
         return "message";
     }
